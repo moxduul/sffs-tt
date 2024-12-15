@@ -1,6 +1,7 @@
 import './App.css';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import API_BASE_URL from './apiConfig';
 
 function App() {
   const [data, setData] = useState([]);
