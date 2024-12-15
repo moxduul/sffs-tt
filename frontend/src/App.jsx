@@ -78,33 +78,6 @@ function App() {
       .catch(error => console.error(`Error saving ${activeTab}:`, error));
   };
 
-  const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
-
-  const handleFileUpload = () => {
-    if (!selectedFile) {
-      alert("Please select a file first.");
-      return;
-    }
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-    axios.post(`${API_BASE_URL}/upload-${activeTab}/`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    })
-      .then(() => {
-        fetchData(activeTab);
-        setSelectedFile(null);
-        alert("File uploaded successfully.");
-      })
-      .catch(error => {
-        console.error("Error uploading file:", error);
-        alert("Failed to upload file.");
-      });
-  };
 
   const renderFormFields = () => {
     switch (activeTab) {
@@ -180,10 +153,17 @@ function App() {
           <div>
             <h2 className="text-2xl font-bold mb-4">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
 
-            <div className="mb-4">
-              <input type="file" onChange={handleFileChange} className="mr-2" />
-              <button onClick={handleFileUpload} className="px-4 py-2 bg-blue-500 text-white rounded">Upload</button>
-            </div>
+            <FileUpload
+              uploadEndpoint={`${API_BASE_URL}/upload-${activeTab}/`}
+              onUploadSuccess={() => {
+               fetchData(activeTab);
+               alert("File uploaded successfully.");
+              }}
+              onUploadFailure={(error) => {
+                console.error("Error uploading file:", error);
+                alert("Failed to upload file.");
+              }}
+            />
 
             <button onClick={() => setShowForm(!showForm)} className="px-4 py-2 bg-blue-500 text-white rounded mb-4">
               {showForm ? "Hide Form" : "Add/Edit"}
