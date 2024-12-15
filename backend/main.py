@@ -16,7 +16,10 @@ app = FastAPI()
 # Allow CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Adjust this to match your frontend's URL
+    allow_origins=[
+         "http://localhost:5173",  # For local development
+        "https://sffs-tt.netlify.app",  # For deployed frontend on Netlify
+        ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
