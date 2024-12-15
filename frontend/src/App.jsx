@@ -20,18 +20,18 @@ function App() {
   };
 
   const fetchData = (entity) => {
-    axios.get(`${API_BASE_URL}/${entity}/`)
+    axios.get(`${VITE_API_BASE_URL}/${entity}/`)
       .then(response => setData(response.data))
       .catch(error => console.error(`Error fetching ${entity}:`, error));
 
     if (entity === "players" || entity === "teams") {
-      axios.get("${API_BASE_URL}/teams/")
+      axios.get("${VITE_API_BASE_URL}/teams/")
         .then(response => setTeams(response.data))
         .catch(error => console.error("Error fetching teams:", error));
-      axios.get("${API_BASE_URL}/divisions/")
+      axios.get("${VITE_API_BASE_URL}/divisions/")
         .then(response => setDivisions(response.data))
         .catch(error => console.error("Error fetching divisions:", error));
-      axios.get("${API_BASE_URL}/players/")
+      axios.get("${VITE_API_BASE_URL}/players/")
         .then(response => setPlayers(response.data))
         .catch(error => console.error("Error fetching players:", error));
     }
@@ -56,7 +56,7 @@ function App() {
   };
 
   const handleDelete = (id) => {
-    axios.delete(`${API_BASE_URL}/${activeTab}/${id}`)
+    axios.delete(`${VITE_API_BASE_URL}/${activeTab}/${id}`)
       .then(() => fetchData(activeTab))
       .catch(error => console.error(`Error deleting ${activeTab}:`, error));
   };
@@ -64,8 +64,8 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const url = isEditing
-      ? `${API_BASE_URL}/${activeTab}/${form.id}`
-      : `${API_BASE_URL}/${activeTab}/`;
+      ? `${VITE_API_BASE_URL}/${activeTab}/${form.id}`
+      : `${VITE_API_BASE_URL}/${activeTab}/`;
 
     const method = isEditing ? axios.put : axios.post;
     method(url, form)
