@@ -20,18 +20,18 @@ function App() {
   };
 
   const fetchData = (entity) => {
-    axios.get(`http://127.0.0.1:8000/${entity}/`)
+    axios.get(`${API_BASE_URL}/${entity}/`)
       .then(response => setData(response.data))
       .catch(error => console.error(`Error fetching ${entity}:`, error));
 
     if (entity === "players" || entity === "teams") {
-      axios.get("http://127.0.0.1:8000/teams/")
+      axios.get("${API_BASE_URL}/teams/")
         .then(response => setTeams(response.data))
         .catch(error => console.error("Error fetching teams:", error));
-      axios.get("http://127.0.0.1:8000/divisions/")
+      axios.get("${API_BASE_URL}/divisions/")
         .then(response => setDivisions(response.data))
         .catch(error => console.error("Error fetching divisions:", error));
-      axios.get("http://127.0.0.1:8000/players/")
+      axios.get("${API_BASE_URL}/players/")
         .then(response => setPlayers(response.data))
         .catch(error => console.error("Error fetching players:", error));
     }
@@ -56,7 +56,7 @@ function App() {
   };
 
   const handleDelete = (id) => {
-    axios.delete(`http://127.0.0.1:8000/${activeTab}/${id}`)
+    axios.delete(`${API_BASE_URL}/${activeTab}/${id}`)
       .then(() => fetchData(activeTab))
       .catch(error => console.error(`Error deleting ${activeTab}:`, error));
   };
@@ -64,8 +64,8 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const url = isEditing
-      ? `http://127.0.0.1:8000/${activeTab}/${form.id}`
-      : `http://127.0.0.1:8000/${activeTab}/`;
+      ? `${API_BASE_URL}/${activeTab}/${form.id}`
+      : `${API_BASE_URL}/${activeTab}/`;
 
     const method = isEditing ? axios.put : axios.post;
     method(url, form)

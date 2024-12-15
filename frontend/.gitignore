@@ -28,3 +28,4 @@ dist-ssr
 
 #Ignore local data
 *.xlsx
+*.sql
