@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import SessionLocal
@@ -231,3 +231,39 @@ def delete_division(division_id: int, db: Session = Depends(get_db)):
     db.delete(existing_division)
     db.commit()
     return {"message": "Division deleted successfully"}
+
+
+# Bulk upload new players
+@app.post("/upload-players/")
+async def upload_players(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    if not file.filename.endswith(".xlsx"):
+        raise HTTPException(status_code=400, detail="Invalid file format. Please upload an Excel file.")
+
+    try:
+        # Read the uploaded Excel file
+        data = pd.read_excel(file.file)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error reading file: {e}")
+
+    # Validate and insert data
+    players = []
+    for _, row in data.iterrows():
+        try:
+            player = Player(
+                first_name=row["first_name"],
+                last_name=row["last_name"],
+                license_number=row["license_number"],
+                email=row.get("email"),
+                phone1=row.get("phone1"),
+                phone2=row.get("phone2"),
+                team_id=row.get("team_id"),
+                classification=row.get("classification"),
+                ELO_points=row.get("ELO_points", 1200.0),
+            )
+            players.append(player)
+        except KeyError as e:
+            raise HTTPException(status_code=400, detail=f"Missing required field: {e}")
+
+    db.bulk_save_objects(players)
+    db.commit()
+    return {"message": f"{len(players)} players added successfully."}
