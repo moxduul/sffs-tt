@@ -131,7 +131,7 @@ function App() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <header className="bg-blue-600 text-white p-4 shadow">
-        <h1 className="text-3xl font-bold text-center">SFFS TT Basel 2</h1>
+        <h1 className="text-3xl font-bold text-center">SFFS TT Basel 3</h1>
       </header>
 
       <div className="text-center mt-6">
